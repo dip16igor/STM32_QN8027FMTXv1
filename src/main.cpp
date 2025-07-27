@@ -1,15 +1,8 @@
-// FM передатчик на QN8027
+// FM transmitter based on QN8027
 
 #include <Arduino.h>
 #include <U8g2lib.h>
 #include <Wire.h>
-
-//#define USE_HSI_CLOCK 1
-// I2C address of the QN8035 tuner.
-//#define QN8027_ADDRESS 0x58
-
-// Chip ID related to QN8035 tuner.
-//#define QN8027_ID 0x84
 
 #define TX_POWER_MAX 75
 #define RDSBUF_SIZE 128 // 8 (bytes) is the smallest value
@@ -387,22 +380,21 @@ void setup(void)
   // }
   // HAL_RCC_MCOConfig(RCC_MCO, RCC_MCO1SOURCE_PLLCLK, RCC_MCODIV_1);
 
-  delay(200); // пауза
+  delay(200); // delay
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-  // pinMode(PB0, INPUT);     // вход кнопки POWER
-  pinMode(PB0, INPUT_PULLUP); // вход кнопки POWER
-  pinMode(PB1, INPUT_PULLUP); // вход кнопка DOWN
-  pinMode(PB2, INPUT_PULLUP); // вход кнопка UP
+  pinMode(PB0, INPUT_PULLUP); // POWER button input
+  pinMode(PB1, INPUT_PULLUP); // DOWN button input
+  pinMode(PB2, INPUT_PULLUP); // UP button input
 
-  pinMode(PA5, INPUT); // Кнопка энкодера
+  pinMode(PA5, INPUT); // Encoder button
 
   pinMode(PA15, OUTPUT);   // RED LED
   pinMode(PB10, OUTPUT);   // BLUE LED
-  digitalWrite(PA15, LOW); // светодиод выкл
-  digitalWrite(PB10, LOW); // светодиод выкл
+  digitalWrite(PA15, LOW); // LED off
+  digitalWrite(PB10, LOW); // LED off
 
-  delay(100); // пауза
+  delay(100); // delay
 
   MyTim1->setMode(1, TIMER_OUTPUT_COMPARE_TOGGLE, PA8);
   MyTim1->setPrescaleFactor(1);                    // Due to setOverflow with MICROSEC_FORMAT, prescaler will be computed automatically based on timer input clock
@@ -481,10 +473,8 @@ void setup(void)
   // -------------------------------------------------------------------------
   u8g2.begin();
   int temp = 0;
-  // u8g2.print(temp, 16);     // Костыль, убирает один странный баг
-  // u8g2.clearBuffer();       // clear the internal memory
-  digitalWrite(PB10, LOW);  // светодиод вкл
-  digitalWrite(PA15, HIGH); // светодиод вкл
+  digitalWrite(PB10, LOW);  // LED on
+  digitalWrite(PA15, HIGH); // LED on
 
   // for (;;)
   // {
@@ -500,8 +490,8 @@ void setup(void)
   u8g2.drawStr(0, 12, "POWER ON "); // write something to the internal memory
   u8g2.sendBuffer();                // transfer internal memory to the display
 
-  digitalWrite(PB10, HIGH); // светодиод вкл
-  digitalWrite(PA15, LOW);  // светодиод вкл
+  digitalWrite(PB10, HIGH); // LED on
+  digitalWrite(PA15, LOW);  // LED on
   // for (;;)
   // {
   // }
@@ -534,8 +524,8 @@ void setup(void)
 
   // freqWord = FREQ_TO_WORD(freq);
   // SetFreq(freqWord);
-  // WriteReg(0x0A, 0x03);       // настройка на канал 320 = 100 МГц
-  // WriteReg(0x07, 0x20);       // настройка на канал 320 = 100 МГц
+  // WriteReg(0x0A, 0x03);       // tune to channel 320 = 100 MHz
+  // WriteReg(0x07, 0x20);       // tune to channel 320 = 100 MHz
   // WriteReg(0x00, 0b00010001); // включение приема, RDS ON, MONO(1)/STEREO(0), сканирование выкл, ручной выбор канала,
   // WriteReg(0x14, 0b00000111); // Громкость 111 - макс
 
